@@ -1,0 +1,87 @@
+### Register a new user
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123",
+  "firstName": "John",
+  "lastName": "Doe"
+}
+
+###
+
+### Verify email with OTP (replace OTP with actual code from email)
+POST http://localhost:3000/auth/verify-email
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "otp": "123456"
+}
+
+###
+
+### Resend OTP if expired
+POST http://localhost:3000/auth/resend-otp
+Content-Type: application/json
+
+{
+  "email": "test@example.com"
+}
+
+###
+
+### Login after email verification
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+###
+
+### Get user profile (replace TOKEN with actual JWT token from login)
+GET http://localhost:3000/auth/profile
+Authorization: Bearer TOKEN
+
+###
+
+### Update user profile
+PUT http://localhost:3000/auth/profile
+Content-Type: application/json
+Authorization: Bearer TOKEN
+
+{
+  "firstName": "Jane",
+  "lastName": "Smith"
+}
+
+###
+
+### Forgot password
+POST http://localhost:3000/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "test@example.com"
+}
+
+###
+
+### Reset password with OTP
+POST http://localhost:3000/auth/reset-password
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "otp": "123456",
+  "newPassword": "newpassword123"
+}
+
+###
+
+### Test basic app endpoint
+GET http://localhost:3000

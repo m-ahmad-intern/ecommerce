@@ -1,0 +1,164 @@
+### Get all categories (for dropdown)
+GET http://localhost:3000/products/categories
+
+###
+
+### Get all products (public)
+GET http://localhost:3000/products
+
+###
+
+### Get products with filters
+GET http://localhost:3000/products?category=Casual&minPrice=10&maxPrice=100&page=1&limit=12
+
+###
+
+### Get products by category
+GET http://localhost:3000/products/category/Casual
+
+###
+
+### Search products
+GET http://localhost:3000/products?search=shirt
+
+###
+
+### Get specific product by ID
+GET http://localhost:3000/products/PRODUCT_ID_HERE
+
+###
+
+### Create a new product (Admin/Super Admin only) - First login as admin
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+###
+
+### Register an admin user first (if needed)
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "admin123",
+  "firstName": "Admin",
+  "lastName": "User"
+}
+
+###
+
+### Create product with form-data (replace TOKEN with actual JWT)
+POST http://localhost:3000/products
+Authorization: Bearer TOKEN
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="name"
+
+Casual T-Shirt
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="description"
+
+A comfortable cotton t-shirt perfect for casual wear
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="price"
+
+29.99
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="category"
+
+Casual
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="sizes"
+
+S
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="sizes"
+
+M
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="sizes"
+
+L
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="colors"
+
+Red
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="colors"
+
+Blue
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="stock"
+
+100
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###
+
+### Create product with JSON (Admin/Super Admin only)
+POST http://localhost:3000/products
+Authorization: Bearer TOKEN
+Content-Type: application/json
+
+{
+  "name": "Formal Blazer",
+  "description": "Elegant blazer for formal occasions",
+  "price": 89.99,
+  "category": "Formal",
+  "sizes": ["S", "M", "L", "XL"],
+  "colors": ["Black", "Navy", "Gray"],
+  "stock": 50
+}
+
+###
+
+### Update product (Admin/Super Admin only)
+PUT http://localhost:3000/products/PRODUCT_ID_HERE
+Authorization: Bearer TOKEN
+Content-Type: application/json
+
+{
+  "name": "Updated Product Name",
+  "price": 39.99,
+  "salePrice": 29.99
+}
+
+###
+
+### Delete product (Admin/Super Admin only)
+DELETE http://localhost:3000/products/PRODUCT_ID_HERE
+Authorization: Bearer TOKEN
+
+###
+
+### Get product statistics (Admin only)
+GET http://localhost:3000/products/admin/stats
+Authorization: Bearer TOKEN
+
+###
+
+### Get low stock products (Admin only)
+GET http://localhost:3000/products/admin/low-stock?threshold=10
+Authorization: Bearer TOKEN
+
+###
+
+### Delete product image (Admin/Super Admin only)
+DELETE http://localhost:3000/products/PRODUCT_ID_HERE/images
+Authorization: Bearer TOKEN
+Content-Type: application/json
+
+{
+  "imageUrl": "https://cloudinary-url-here"
+}
+
+###
+
+### Test basic app endpoint
+GET http://localhost:3000

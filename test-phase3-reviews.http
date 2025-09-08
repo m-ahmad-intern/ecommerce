@@ -1,0 +1,321 @@
+# Phase 3.5 - Reviews System Testing
+
+# SETUP: Ensure you have:
+# 1. A running server (npm run start:dev)
+# 2. Valid JWT token from login
+# 3. At least one product created in the system
+
+### Variables (Update these with your actual values)
+@baseUrl = http://localhost:3000
+@authToken = YOUR_JWT_TOKEN_HERE
+@productId = YOUR_PRODUCT_ID_HERE
+@reviewId = YOUR_REVIEW_ID_HERE
+
+### 1. Create Review on Product
+POST {{baseUrl}}/products/{{productId}}/reviews
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "rating": 5,
+  "comment": "Absolutely amazing product! The quality exceeded my expectations and the fit is perfect. Highly recommend this to anyone looking for premium clothing."
+}
+
+###
+
+### 2. Create Another Review (Different User or Different Product)
+POST {{baseUrl}}/products/{{productId}}/reviews
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "rating": 4,
+  "comment": "Great product overall. Good quality materials and comfortable to wear. Only minor issue was the delivery time was a bit longer than expected."
+}
+
+###
+
+### 3. Try to Create Duplicate Review (Should Fail)
+POST {{baseUrl}}/products/{{productId}}/reviews
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "rating": 3,
+  "comment": "Trying to add another review for the same product."
+}
+
+###
+
+### 4. Get Product Reviews (Public - No Auth Required)
+GET {{baseUrl}}/products/{{productId}}/reviews
+
+###
+
+### 5. Get Product Reviews with Pagination
+GET {{baseUrl}}/products/{{productId}}/reviews?page=1&limit=5
+
+###
+
+### 6. Get Product Reviews Sorted by Newest
+GET {{baseUrl}}/products/{{productId}}/reviews?sort=newest&page=1&limit=10
+
+###
+
+### 7. Get Product Reviews Sorted by Oldest
+GET {{baseUrl}}/products/{{productId}}/reviews?sort=oldest
+
+###
+
+### 8. Get Product Reviews Sorted by Highest Rating
+GET {{baseUrl}}/products/{{productId}}/reviews?sort=highest
+
+###
+
+### 9. Get Product Reviews Sorted by Lowest Rating
+GET {{baseUrl}}/products/{{productId}}/reviews?sort=lowest
+
+###
+
+### 10. Get My Reviews (User's Own Reviews)
+GET {{baseUrl}}/reviews/my-reviews
+Authorization: Bearer {{authToken}}
+
+###
+
+### 11. Get My Reviews with Pagination
+GET {{baseUrl}}/reviews/my-reviews?page=1&limit=5
+Authorization: Bearer {{authToken}}
+
+###
+
+### 12. Get Specific Review by ID
+GET {{baseUrl}}/reviews/{{reviewId}}
+
+###
+
+### 13. Delete My Own Review
+DELETE {{baseUrl}}/reviews/{{reviewId}}
+Authorization: Bearer {{authToken}}
+
+###
+
+### 14. Admin Delete Any Review (Admin Only)
+DELETE {{baseUrl}}/reviews/admin/{{reviewId}}
+Authorization: Bearer {{authToken}}
+
+###
+
+### 15. Get Product Details (Should Show Updated Rating)
+GET {{baseUrl}}/products/{{productId}}
+
+###
+
+# VALIDATION TEST CASES
+
+### 16. Invalid Rating (Below 1)
+POST {{baseUrl}}/products/{{productId}}/reviews
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "rating": 0,
+  "comment": "This should fail with validation error."
+}
+
+###
+
+### 17. Invalid Rating (Above 5)
+POST {{baseUrl}}/products/{{productId}}/reviews
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "rating": 6,
+  "comment": "This should also fail with validation error."
+}
+
+###
+
+### 18. Comment Too Short
+POST {{baseUrl}}/products/{{productId}}/reviews
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "rating": 4,
+  "comment": "Short"
+}
+
+###
+
+### 19. Comment Too Long (Over 500 characters)
+POST {{baseUrl}}/products/{{productId}}/reviews
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "rating": 4,
+  "comment": "This comment is intentionally very long to test the validation limit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. This should definitely exceed the 500 character limit."
+}
+
+###
+
+### 20. Missing Rating
+POST {{baseUrl}}/products/{{productId}}/reviews
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "comment": "Comment without rating should fail."
+}
+
+###
+
+### 21. Missing Comment
+POST {{baseUrl}}/products/{{productId}}/reviews
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "rating": 4
+}
+
+###
+
+### 22. Invalid Product ID
+POST {{baseUrl}}/products/invalid-product-id/reviews
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "rating": 4,
+  "comment": "Review for invalid product ID."
+}
+
+###
+
+### 23. Non-existent Product ID
+POST {{baseUrl}}/products/507f1f77bcf86cd799439011/reviews
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "rating": 4,
+  "comment": "Review for non-existent product."
+}
+
+###
+
+### 24. Unauthorized Review Creation (No Token)
+POST {{baseUrl}}/products/{{productId}}/reviews
+Content-Type: application/json
+
+{
+  "rating": 4,
+  "comment": "This should fail without authentication."
+}
+
+###
+
+### 25. Delete Review Without Permission
+DELETE {{baseUrl}}/reviews/{{reviewId}}
+
+###
+
+# SAMPLE TEST DATA FOR DIFFERENT SCENARIOS
+
+### Sample Review 1 - Excellent Product
+POST {{baseUrl}}/products/{{productId}}/reviews
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "rating": 5,
+  "comment": "Outstanding quality! The fabric is premium, stitching is perfect, and the fit is exactly as described. Will definitely purchase again."
+}
+
+###
+
+### Sample Review 2 - Good Product with Minor Issues
+POST {{baseUrl}}/products/{{productId}}/reviews
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "rating": 4,
+  "comment": "Really good product overall. The material quality is excellent and the design is stylish. However, the sizing runs slightly small, so consider ordering one size up."
+}
+
+###
+
+### Sample Review 3 - Average Product
+POST {{baseUrl}}/products/{{productId}}/reviews
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "rating": 3,
+  "comment": "It's an okay product. The quality is decent for the price point, but nothing exceptional. The color was slightly different from what I expected."
+}
+
+###
+
+### Sample Review 4 - Below Average
+POST {{baseUrl}}/products/{{productId}}/reviews
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "rating": 2,
+  "comment": "Not very satisfied with this purchase. The fabric feels cheap and the stitching is somewhat loose. Expected better quality for the price."
+}
+
+###
+
+### Sample Review 5 - Poor Product
+POST {{baseUrl}}/products/{{productId}}/reviews
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "rating": 1,
+  "comment": "Very disappointed with this product. Poor quality materials, terrible fit, and not as described. Would not recommend to others."
+}
+
+###
+
+# EXPECTED RESULTS:
+
+# ✅ Success Cases:
+# - Review creation should return 201 with review details
+# - Product rating should be automatically updated
+# - Reviews should be returned with user information (firstName, lastName)
+# - Pagination should work correctly
+# - Sorting should work for all options (newest, oldest, highest, lowest)
+# - Users should only see their own reviews in /my-reviews
+# - Product details should show updated averageRating and totalReviews
+
+# 🚨 Error Cases:
+# - Duplicate reviews should return 400 Bad Request
+# - Invalid ratings should return validation errors
+# - Comments outside 10-500 character range should fail
+# - Missing required fields should return validation errors
+# - Invalid/non-existent product IDs should return appropriate errors
+# - Unauthorized requests should return 401 Unauthorized
+# - Users should not be able to delete others' reviews (except admins)
+
+# 📊 Rating Calculation Test:
+# After adding multiple reviews, check:
+# 1. Product averageRating is correctly calculated
+# 2. Product totalReviews count is accurate
+# 3. Rating breakdown in review list response shows correct distribution
+# 4. Product listing shows updated ratings
+
+# 🔄 Flow Test:
+# 1. Create product
+# 2. Add multiple reviews with different ratings
+# 3. Verify product rating is updated
+# 4. Delete a review
+# 5. Verify product rating is recalculated
+# 6. Check review pagination works with remaining reviews
