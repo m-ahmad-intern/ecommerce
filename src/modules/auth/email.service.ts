@@ -25,6 +25,10 @@ export class EmailService {
             user: emailUser,
             pass: emailPass,
           },
+          // Add timeout configuration
+          connectionTimeout: 5000, // 5 seconds
+          greetingTimeout: 3000,
+          socketTimeout: 5000,
         });
         console.log(`Email service initialized with ${emailService}`);
         console.log(`Using email: ${emailUser}`);
@@ -53,6 +57,10 @@ export class EmailService {
           user: testAccount.user,
           pass: testAccount.pass,
         },
+        // Add timeout configuration for test emails too
+        connectionTimeout: 5000,
+        greetingTimeout: 3000,
+        socketTimeout: 5000,
       });
 
       console.log('Email service initialized with test account');

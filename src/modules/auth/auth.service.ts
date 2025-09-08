@@ -58,8 +58,11 @@ export class AuthService {
 
     await user.save();
 
-    // Send verification email
-    await this.emailService.sendOTP(email, otp, 'verification');
+    // Send verification email asynchronously (don't block response)
+    this.emailService.sendOTP(email, otp, 'verification').catch(error => {
+      console.error('Failed to send verification email:', error);
+      // Log but don't block registration
+    });
 
     return {
       message:
@@ -119,8 +122,11 @@ export class AuthService {
     user.otpExpiresAt = otpExpiresAt;
     await user.save();
 
-    // Send verification email
-    await this.emailService.sendOTP(email, otp, 'verification');
+    // Send verification email asynchronously (don't block response)
+    this.emailService.sendOTP(email, otp, 'verification').catch(error => {
+      console.error('Failed to send verification email:', error);
+      // Log but don't block response
+    });
 
     return {
       message: 'New verification code sent to your email.',
@@ -234,8 +240,11 @@ export class AuthService {
     user.passwordResetExpiresAt = otpExpiresAt;
     await user.save();
 
-    // Send reset email
-    await this.emailService.sendOTP(email, otp, 'password-reset');
+    // Send reset email asynchronously (don't block response)
+    this.emailService.sendOTP(email, otp, 'password-reset').catch(error => {
+      console.error('Failed to send password reset email:', error);
+      // Log but don't block response
+    });
 
     return {
       message: 'Password reset code sent to your email.',
